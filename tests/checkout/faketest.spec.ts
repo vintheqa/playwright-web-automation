@@ -5,8 +5,8 @@ test.beforeEach(async ({ loginPage }) => {
   await loginPage.login("standard_user", "secret_sauce");
 });
 
-test("User should be able to sort items by name", async ({ inventoryPage }) => {
+test("Failing test", async ({ inventoryPage }) => {
   await inventoryPage.navigateToInventoryPage();
   await inventoryPage.sortItems("Name (A to Z)");
-  await inventoryPage.assertItemSorting("[data-test='inventory-item-name']", "name", "asc");
+  await inventoryPage.assertItemSorting("[data-test='inventory-item-name']", "name", "desc");
 });

@@ -24,6 +24,9 @@ jobs:
       run: npx playwright install --with-deps
     - name: Run Playwright tests
       run: npx playwright test --project=chromium --shard=${{ matrix.shard }}/2 --last-failed
+    - name: Rerun failed tests
+      if: failure()
+      run: npx playwright test --last-failed
     - name: Upload report
       if: always()
       uses: actions/upload-artifact@v4
