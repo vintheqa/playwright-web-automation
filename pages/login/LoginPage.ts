@@ -1,5 +1,7 @@
 import { Page, Locator, expect } from "@playwright/test";
 import { interceptResponse } from "../../utils/apiInterceptor";
+import { ApiClient, authenticateViaApi } from "../../utils/apiClient";
+import { request } from "https";
 
 export class LoginPage {
   readonly usernameInput: Locator;
@@ -16,20 +18,13 @@ export class LoginPage {
     await this.page.goto("/signin");
   }
 
-  async loginViaAPI(username: string, password: string) {
-    await this.page.goto('/');
-    const response = await this.page.request.post("/api/signin", {
-      data: { userName: username, password },
-    });
-    
-    if (!response.ok()) {
-      throw new Error(`Login failed with status ${response.status()}`);
-    }
+  async setSessionUser(username: string) {
+    await this.page.goto("/");
+    await this.page.evaluate((name) => {
+      sessionStorage.setItem("username", name);
+    }, username);
 
     await this.page.reload();
-    
-    // this.page.goto("/?signin=true");
-    return response;
   }
 
   async login(username: string, password: string) {
@@ -54,7 +49,7 @@ export class LoginPage {
   }
 
   async assertLoginErrorMsg(errMsg: string) {
-      await interceptResponse(this.page, "**/api/signin", {
+    await interceptResponse(this.page, "**/api/signin", {
       method: "POST",
       status: (s) => s !== 200,
     });

@@ -2,7 +2,6 @@ import { test } from "../../fixtures/baseTest";
 
 test("User can login with correct credentials", async ({ loginPage }) => {
   await loginPage.login("demouser", "testingisfun99");
-
   await loginPage.assertLoginSuccess();
 });
 
